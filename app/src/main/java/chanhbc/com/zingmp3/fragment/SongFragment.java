@@ -127,7 +127,7 @@ public class SongFragment extends Fragment implements AdapterView.OnItemClickLis
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.ll_play_song:
-                
+
                 break;
 
             default:
