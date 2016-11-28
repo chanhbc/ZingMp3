@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onHotSongLoad(ItemAlbum itemAlbum) {
         tabLayout.setVisibility(View.GONE);
-        songFragment = new SongFragment(itemAlbum.getId());
+        songFragment = new SongFragment(itemAlbum.getId(),itemAlbum.getCover());
         songFragments = new ArrayList<>();
         songFragments.add(songFragment);
         pagerAdapter = new PagerAdapter(fragmentManager, songFragments);
@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onReleaseDateSongLoad(ItemAlbum itemAlbum) {
         tabLayout.setVisibility(View.GONE);
-        songFragment = new SongFragment(itemAlbum.getId());
+        songFragment = new SongFragment(itemAlbum.getId(),itemAlbum.getCover());
         songFragments = new ArrayList<>();
         songFragments.add(songFragment);
         pagerAdapter = new PagerAdapter(fragmentManager, songFragments);
@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onTotalPlayDateSongLoad(ItemAlbum itemAlbum) {
         tabLayout.setVisibility(View.GONE);
-        songFragment = new SongFragment(itemAlbum.getId());
+        songFragment = new SongFragment(itemAlbum.getId(),itemAlbum.getCover());
         songFragments = new ArrayList<>();
         songFragments.add(songFragment);
         pagerAdapter = new PagerAdapter(fragmentManager, songFragments);
