@@ -18,7 +18,6 @@ import android.widget.GridView;
 import java.util.ArrayList;
 
 import chanhbc.com.zingmp3.R;
-import chanhbc.com.zingmp3.activity.SongsActivity;
 import chanhbc.com.zingmp3.adapter.AlbumAdapter;
 import chanhbc.com.zingmp3.manager.AlbumManager;
 import chanhbc.com.zingmp3.model.ItemAlbum;
@@ -47,7 +46,7 @@ public class AlbumTotalPlayFragment extends Fragment implements AdapterView.OnIt
                     albums.add(itemAlbums.get(i));
                 }
                 albumAdapter = new AlbumAdapter(albums);
-                Log.d("NEW","new");
+                Log.d("Total","new");
                 Message message = new Message();
                 message.what = StaticFinal.UPDATE_GRIDVIEW;
                 handler.sendMessage(message);

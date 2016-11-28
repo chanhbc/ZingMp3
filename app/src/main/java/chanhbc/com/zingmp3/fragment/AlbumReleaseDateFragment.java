@@ -18,7 +18,6 @@ import android.widget.GridView;
 import java.util.ArrayList;
 
 import chanhbc.com.zingmp3.R;
-import chanhbc.com.zingmp3.activity.SongsActivity;
 import chanhbc.com.zingmp3.adapter.AlbumAdapter;
 import chanhbc.com.zingmp3.manager.AlbumManager;
 import chanhbc.com.zingmp3.model.ItemAlbum;

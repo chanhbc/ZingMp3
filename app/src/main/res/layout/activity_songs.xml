@@ -8,109 +8,116 @@
     android:orientation="vertical"
     tools:context="chanhbc.com.zingmp3.activity.SongsActivity">
 
-    <ScrollView
+    <RelativeLayout
+        android:id="@+id/rl_song"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:fillViewport="true">
+        android:orientation="vertical">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:fillViewport="true">
 
-            <ImageView
-                android:id="@+id/iv_cover_album"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="196dp"
-                android:scaleType="centerCrop" />
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            <chanhbc.com.zingmp3.custom.CustomListView
-                android:id="@+id/lv_song"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:scrollbars="none">
+                <ImageView
+                    android:id="@+id/iv_cover_album"
+                    android:layout_width="match_parent"
+                    android:layout_height="196dp"
+                    android:scaleType="centerCrop" />
 
-            </chanhbc.com.zingmp3.custom.CustomListView>
-        </LinearLayout>
+                <chanhbc.com.zingmp3.custom.CustomListView
+                    android:id="@+id/lv_song"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:scrollbars="none">
 
-    </ScrollView>
+                </chanhbc.com.zingmp3.custom.CustomListView>
+            </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/ll_play_song"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#9C27B0"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="4dp">
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/civ_cover_song"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_margin="4dp" />
+        </ScrollView>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:id="@+id/ll_play_song"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:padding="4dp">
-
-            <TextView
-                android:id="@+id/tv_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="marquee"
-                android:singleLine="true"
-                android:textColor="#ffffff"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/tv_artist"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="marquee"
-                android:singleLine="true"
-                android:textColor="#ffffff" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="#9C27B0"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:padding="4dp">
 
-            <ImageView
-                android:id="@+id/iv_privious"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:background="@drawable/ic_skip_previous_black_24dp"
-                android:padding="4dp" />
-
-            <ImageView
-                android:id="@+id/iv_play"
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/civ_cover_song"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:background="@drawable/ic_play_circle_outline_black_24dp"
-                android:padding="4dp" />
+                android:layout_margin="4dp" />
 
-            <ImageView
-                android:id="@+id/iv_next"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:background="@drawable/ic_skip_next_black_24dp" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:padding="4dp">
 
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="marquee"
+                    android:singleLine="true"
+                    android:textColor="#ffffff"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tv_artist"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="marquee"
+                    android:singleLine="true"
+                    android:textColor="#ffffff" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="4dp">
+
+                <ImageView
+                    android:id="@+id/iv_privious"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/ic_skip_previous_black_24dp"
+                    android:padding="4dp" />
+
+                <ImageView
+                    android:id="@+id/iv_play"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/ic_play_circle_outline_black_24dp"
+                    android:padding="4dp" />
+
+                <ImageView
+                    android:id="@+id/iv_next"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/ic_skip_next_black_24dp" />
+
+
+            </LinearLayout>
 
         </LinearLayout>
-
-    </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>
