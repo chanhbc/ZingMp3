@@ -15,11 +15,11 @@ import chanhbc.com.zingmp3.App;
 import chanhbc.com.zingmp3.R;
 import chanhbc.com.zingmp3.model.ItemAlbum;
 
-public class AlbumAdapter extends BaseAdapter {
+public class ItemAlbumAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     private ArrayList<ItemAlbum> ablums;
 
-    public AlbumAdapter(ArrayList<ItemAlbum> ablums) {
+    public ItemAlbumAdapter(ArrayList<ItemAlbum> ablums) {
         this.ablums = ablums;
         inflater = LayoutInflater.from(App.getContext());
     }

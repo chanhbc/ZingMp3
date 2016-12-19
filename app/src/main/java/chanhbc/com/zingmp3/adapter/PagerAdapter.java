@@ -3,31 +3,36 @@ package chanhbc.com.zingmp3.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.Log;
 
 import java.util.ArrayList;
 
-public class PagerAdapter extends FragmentStatePagerAdapter{
-    private ArrayList<Fragment> fragments;
+import chanhbc.com.zingmp3.fragment.ListAlbumFragment;
+import chanhbc.com.zingmp3.model.ItemAlbum;
 
-    public PagerAdapter(FragmentManager fragmentManager, ArrayList<Fragment> fragments){
+public class PagerAdapter extends FragmentStatePagerAdapter implements ListAlbumFragment.OnLoadItemSongListener {
+    private OnLoadItemSongListener onLoadItemSongListener;
+
+    public PagerAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);
-        this.fragments = fragments;
     }
 
     @Override
     public Fragment getItem(int position) {
-        return fragments.get(position);
+        ListAlbumFragment listAlbumFragment = new ListAlbumFragment(position);
+        listAlbumFragment.setOnLoadItemSongListener(PagerAdapter.this);
+        return listAlbumFragment;
     }
 
     @Override
     public int getCount() {
-        return fragments.size();
+        return 3;
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
         String title = null;
-        switch (position){
+        switch (position) {
             case 0:
                 title = "Nổi bật";
                 break;
@@ -44,5 +49,18 @@ public class PagerAdapter extends FragmentStatePagerAdapter{
                 break;
         }
         return title;
+    }
+
+    @Override
+    public void onSongLoad(ItemAlbum itemAlbum) {
+        onLoadItemSongListener.onSongLoad(itemAlbum);
+    }
+
+    public void setOnLoadItemSongListener(OnLoadItemSongListener listener) {
+        this.onLoadItemSongListener = listener;
+    }
+
+    public interface OnLoadItemSongListener {
+        void onSongLoad(ItemAlbum itemAlbum);
     }
 }

@@ -5,8 +5,7 @@
     android:id="@+id/activity_album"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="chanhbc.com.zingmp3.activity.SongsActivity">
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/rl_song"
@@ -23,6 +22,7 @@
             android:fillViewport="true">
 
             <LinearLayout
+                android:id="@+id/ll_list_song"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
@@ -46,7 +46,7 @@
         </ScrollView>
 
         <LinearLayout
-            android:id="@+id/ll_play_song"
+            android:id="@+id/ll_play_song_lite"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -56,7 +56,7 @@
             android:padding="4dp">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/civ_cover_song"
+                android:id="@+id/civ_cover_song_1"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_margin="4dp" />
@@ -69,7 +69,7 @@
                 android:padding="4dp">
 
                 <TextView
-                    android:id="@+id/tv_title"
+                    android:id="@+id/tv_title_1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="marquee"
@@ -78,7 +78,7 @@
                     android:textSize="14sp" />
 
                 <TextView
-                    android:id="@+id/tv_artist"
+                    android:id="@+id/tv_artist_1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="marquee"
@@ -95,21 +95,21 @@
                 android:padding="4dp">
 
                 <ImageView
-                    android:id="@+id/iv_privious"
+                    android:id="@+id/iv_privious_1"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:background="@drawable/ic_skip_previous_black_24dp"
                     android:padding="4dp" />
 
                 <ImageView
-                    android:id="@+id/iv_play"
+                    android:id="@+id/iv_play_1"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:background="@drawable/ic_play_circle_outline_black_24dp"
                     android:padding="4dp" />
 
                 <ImageView
-                    android:id="@+id/iv_next"
+                    android:id="@+id/iv_next_1"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:background="@drawable/ic_skip_next_black_24dp" />
@@ -119,5 +119,15 @@
 
         </LinearLayout>
     </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_play_song_full"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include layout="@layout/activity_play" />
+
+    </LinearLayout>
 
 </RelativeLayout>
