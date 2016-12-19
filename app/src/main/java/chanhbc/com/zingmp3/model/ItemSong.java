@@ -9,14 +9,14 @@ public class ItemSong {
     private String link1;
     private String link2;
 
-    public ItemSong(String title, String artist, String cover, String source1,String source2, String link1,String link2) {
+    public ItemSong(String title, String artist, String cover, String source1, String source2, String link1, String link2) {
         this.title = title;
         this.artist = artist;
         this.cover = cover;
         this.source1 = source1;
         this.source2 = source2;
         this.link1 = link1;
-        this.link1 = link2;
+        this.link2 = link2;
     }
 
     public String getTitle() {

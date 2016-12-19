@@ -1,5 +1,9 @@
 package chanhbc.com.zingmp3.activity;
 
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -26,6 +30,7 @@ import chanhbc.com.zingmp3.fragment.AlbumFragmentManager;
 import chanhbc.com.zingmp3.fragment.SongFragmentManager;
 import chanhbc.com.zingmp3.model.ItemAlbum;
 import chanhbc.com.zingmp3.model.ItemListMusic;
+import chanhbc.com.zingmp3.service.PlaySong;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener, PagerAdapter.OnLoadItemSongListener {
     private ArrayList<ItemListMusic> listMusics;
@@ -48,7 +53,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_main);
         initViews();
         initializeComponents();
+        llToolBar.setVisibility(View.GONE);
+        tabLayout.setVisibility(View.VISIBLE);
+        viewPager.setVisibility(View.VISIBLE);
+        pagerAdapter = new PagerAdapter(fragmentManager);
+        viewPager.setAdapter(pagerAdapter);
+        tabLayout.setupWithViewPager(viewPager);
+        viewPager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        viewPager.setCurrentItem(1);
+        pagerAdapter.setOnLoadItemSongListener(MainActivity.this);
+        tabLayout.setTabsFromPagerAdapter(pagerAdapter);
     }
+
 
     private void initViews() {
         lvMusic = (ListView) findViewById(R.id.lv_music);
@@ -133,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         if (getFragmentManager().getBackStackEntryCount() > 0) {
             getFragmentManager().popBackStack();
         } else {
-            
+
             super.onBackPressed();
         }
     }

@@ -31,7 +31,6 @@ public class ListAlbumFragment extends Fragment implements AbsListView.OnScrollL
     private int scrollStale = 15;
     private OnLoadItemSongListener onLoadItemSongListener;
     private int type;
-    private SongFragmentManager songFragmentManager;
 
     public ListAlbumFragment(int type) {
         this.type = type;
