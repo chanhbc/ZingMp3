@@ -11,7 +11,7 @@ import android.util.Log;
 
 import java.io.IOException;
 
-public class PlaySong extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnBufferingUpdateListener {
+public class PlaySong extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnBufferingUpdateListener, MediaPlayer.OnCompletionListener {
     private MediaPlayer mediaPlayer;
     private OnPrepareListener onPrepareListener;
 
@@ -38,6 +38,11 @@ public class PlaySong extends Service implements MediaPlayer.OnPreparedListener,
 
     }
 
+    @Override
+    public void onCompletion(MediaPlayer mp) {
+        onPrepareListener.OnCompletion();
+    }
+
     public class MyBinderMedia extends Binder {
         public PlaySong getService() {
             return PlaySong.this;
@@ -55,6 +60,7 @@ public class PlaySong extends Service implements MediaPlayer.OnPreparedListener,
             mediaPlayer.setOnPreparedListener(this);
             mediaPlayer.setOnBufferingUpdateListener(this);
             mediaPlayer.prepareAsync();
+            mediaPlayer.setOnCompletionListener(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -87,5 +93,6 @@ public class PlaySong extends Service implements MediaPlayer.OnPreparedListener,
 
     public interface OnPrepareListener{
         void OnPrepare();
+        void OnCompletion();
     }
 }

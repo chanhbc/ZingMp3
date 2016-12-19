@@ -119,11 +119,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     viewPager.setVisibility(View.VISIBLE);
                     pagerAdapter = new PagerAdapter(fragmentManager);
                     viewPager.setAdapter(pagerAdapter);
-                    tabLayout.setupWithViewPager(viewPager);
+                    if (tabLayout == null)
+                        tabLayout.setupWithViewPager(viewPager);
                     viewPager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
                     viewPager.setCurrentItem(1);
                     pagerAdapter.setOnLoadItemSongListener(MainActivity.this);
-                    tabLayout.setTabsFromPagerAdapter(pagerAdapter);
+                    if (tabLayout == null)
+                        tabLayout.setTabsFromPagerAdapter(pagerAdapter);
                 }
                 break;
 

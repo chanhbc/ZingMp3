@@ -72,6 +72,8 @@ public class SongFragmentManager extends Fragment implements AdapterView.OnItemC
     private TextView tvTimeCurrent;
     private TextView tvTimeTotal;
     private SeekBar sbTime;
+    private int repeat = 0;
+    private int shuffle = 0;
 
     public SongFragmentManager(String codeId, String urlCoverAlbum) {
         this.codeId = codeId;
@@ -202,7 +204,7 @@ public class SongFragmentManager extends Fragment implements AdapterView.OnItemC
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         switch (parent.getId()) {
             case R.id.lv_song:
-                llListSong.setVisibility(View.GONE);
+                //llListSong.setVisibility(View.GONE);
                 llPlayFull.setVisibility(View.VISIBLE);
                 itemSong = itemSongs.get(position);
                 tvTitle.setText(itemSong.getTitle());
@@ -228,8 +230,8 @@ public class SongFragmentManager extends Fragment implements AdapterView.OnItemC
             case R.id.tv_title_1:
             case R.id.civ_cover_song_1:
             case R.id.ll_play_song_lite:
-                llListSong.setVisibility(View.GONE);
-                llPlayLite.setVisibility(View.GONE);
+                //llListSong.setVisibility(View.GONE);
+                //llPlayLite.setVisibility(View.GONE);
                 llPlayFull.setVisibility(View.VISIBLE);
                 llPlayFull.startAnimation(anim_ll_play_song);
                 tvTitle.setText(itemSong.getTitle());
@@ -256,9 +258,10 @@ public class SongFragmentManager extends Fragment implements AdapterView.OnItemC
                 llPlayLite.setOnClickListener(SongFragmentManager.this);
                 tvTitle1.setText(itemSong.getTitle());
                 tvArtist1.setText(itemSong.getArtist());
+                ivPlay1.setOnClickListener(SongFragmentManager.this);
                 Glide.with(getContext()).load(itemSong.getCover()).into(civCoverSong1);
                 civCoverSong1.startAnimation(anim_cover_song);
-                llListSong.setVisibility(View.VISIBLE);
+                //llListSong.setVisibility(View.VISIBLE);
                 break;
 
             case R.id.iv_play_1:
@@ -274,6 +277,20 @@ public class SongFragmentManager extends Fragment implements AdapterView.OnItemC
                     playSong.start();
                     startThread();
                 }
+                break;
+
+            case R.id.iv_repeat:
+                break;
+
+            case R.id.iv_shuffle:
+                break;
+
+            case R.id.iv_next_1:
+            case R.id.iv_next:
+                break;
+
+            case R.id.iv_privious_1:
+            case R.id.iv_privious:
                 break;
 
             default:
@@ -331,6 +348,11 @@ public class SongFragmentManager extends Fragment implements AdapterView.OnItemC
         tvTimeTotal.setText(getTimeFormat(playSong.getTimeTotal()));
         sbTime.setMax(playSong.getTimeTotal());
         startThread();
+    }
+
+    @Override
+    public void OnCompletion() {
+
     }
 
     private void startThread() {
