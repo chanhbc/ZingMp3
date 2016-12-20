@@ -7,49 +7,59 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/rl_song"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <ScrollView
+        <LinearLayout
+            android:id="@+id/ll_song"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:fillViewport="true">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:weightSum="1">
 
-            <LinearLayout
-                android:id="@+id/ll_list_song"
+            <ScrollView
+                android:id="@+id/scrollView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:fillViewport="true">
 
-                <ImageView
-                    android:id="@+id/iv_cover_album"
+                <LinearLayout
+                    android:id="@+id/ll_list_song"
                     android:layout_width="match_parent"
-                    android:layout_height="196dp"
-                    android:scaleType="centerCrop" />
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-                <chanhbc.com.zingmp3.custom.CustomListView
-                    android:id="@+id/lv_song"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:focusable="false"
-                    android:scrollbars="none">
+                    <ImageView
+                        android:id="@+id/iv_cover_album"
+                        android:layout_width="match_parent"
+                        android:layout_height="196dp"
+                        android:scaleType="centerCrop" />
 
-                </chanhbc.com.zingmp3.custom.CustomListView>
-            </LinearLayout>
+                    <chanhbc.com.zingmp3.custom.CustomListView
+                        android:id="@+id/lv_song"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:scrollbars="none">
 
-        </ScrollView>
+                    </chanhbc.com.zingmp3.custom.CustomListView>
+                </LinearLayout>
+
+            </ScrollView>
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/ll_play_song_lite"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:layout_below="@+id/rl_song"
             android:background="#9C27B0"
             android:gravity="center_vertical"
             android:orientation="horizontal"
@@ -118,7 +128,8 @@
             </LinearLayout>
 
         </LinearLayout>
-    </RelativeLayout>
+    </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/ll_play_song_full"

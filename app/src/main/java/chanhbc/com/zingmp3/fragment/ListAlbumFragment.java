@@ -49,7 +49,6 @@ public class ListAlbumFragment extends Fragment implements AbsListView.OnScrollL
                     albums.add(itemAlbums.get(i));
                 }
                 itemAlbumAdapter = new ItemAlbumAdapter(albums);
-                Log.d("NEW", "new");
                 Message message = new Message();
                 message.what = StaticFinal.UPDATE_GRIDVIEW;
                 handler.sendMessage(message);

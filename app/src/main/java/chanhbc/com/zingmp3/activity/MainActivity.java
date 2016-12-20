@@ -1,9 +1,7 @@
 package chanhbc.com.zingmp3.activity;
 
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.IBinder;
+import android.content.SharedPreferences;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,7 +11,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -25,12 +22,9 @@ import java.util.ArrayList;
 import chanhbc.com.zingmp3.R;
 import chanhbc.com.zingmp3.adapter.MenuAdapter;
 import chanhbc.com.zingmp3.adapter.PagerAdapter;
-import chanhbc.com.zingmp3.adapter.SongAdapter;
 import chanhbc.com.zingmp3.fragment.AlbumFragmentManager;
-import chanhbc.com.zingmp3.fragment.SongFragmentManager;
 import chanhbc.com.zingmp3.model.ItemAlbum;
 import chanhbc.com.zingmp3.model.ItemListMusic;
-import chanhbc.com.zingmp3.service.PlaySong;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener, PagerAdapter.OnLoadItemSongListener {
     private ArrayList<ItemListMusic> listMusics;
@@ -43,9 +37,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private ImageView ivNavigation;
     private FragmentManager fragmentManager;
     private AlbumFragmentManager albumFragmentManager;
-    private SongFragmentManager songFragmentManager;
     private LinearLayout llPlaySong;
     private LinearLayout llToolBar;
+    private boolean isFirst = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private void initViews() {
         lvMusic = (ListView) findViewById(R.id.lv_music);
         dlMenu = (DrawerLayout) findViewById(R.id.dl_menu);
-        viewPager = (ViewPager) findViewById(R.id.view_pager);
+        viewPager = (ViewPager) findViewById(R.id.vp);
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         ivNavigation = (ImageView) findViewById(R.id.iv_navigation);
         viewPager.setVisibility(View.GONE);
@@ -99,13 +93,27 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             if (fragment.isVisible()) {
                 return;
             }
-            getSupportFragmentManager().beginTransaction().show(fragment).commit();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .show(fragment)
+                    .commit();
             return;
         }
-        getSupportFragmentManager().beginTransaction().replace(R.id.view_pager, fragment, fragment.getClass().getName())
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .addToBackStack(null)
-                .commit();
+        if (isFirst == false) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.layout_content, fragment, fragment.getClass().getName())
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .commit();
+        } else {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.layout_content, fragment, fragment.getClass().getName())
+                    .addToBackStack(null)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .commit();
+        }
+        isFirst = true;
     }
 
     @Override
@@ -159,8 +167,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onSongLoad(ItemAlbum itemAlbum) {
         tabLayout.setVisibility(View.GONE);
-        songFragmentManager = new SongFragmentManager(itemAlbum.getId(), itemAlbum.getCover());
-        SongAdapter songAdapter = new SongAdapter(fragmentManager, songFragmentManager);
-        viewPager.setAdapter(songAdapter);
+        Intent intent = new Intent(this, PlayActivity.class);
+        intent.putExtra("SongId", itemAlbum.getId());
+        intent.putExtra("SongCover", itemAlbum.getCover());
+        startActivity(intent);
     }
 }
