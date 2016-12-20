@@ -97,6 +97,8 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
     private SharedPreferences sp;
     private int index;
     private LinearLayout llSong;
+    private ImageView ivActivityPlay;
+    private boolean played = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -165,6 +167,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
         sbTime = (SeekBar) findViewById(R.id.sb_time_process);
         ivDownload = (ImageView) findViewById(R.id.iv_download);
         llSong = (LinearLayout) findViewById(R.id.ll_song);
+        ivActivityPlay = (ImageView) findViewById(R.id.iv_activity_play);
         ivDownload.setOnClickListener(this);
         ivClose.setOnClickListener(this);
         ivPlay.setOnClickListener(this);
@@ -240,6 +243,15 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
                 llPlayFull.setVisibility(View.VISIBLE);
                 llSong.setVisibility(View.GONE);
                 itemSong = itemSongs.get(position);
+                isPlay = true;
+                if (shuffle == 1) {
+                    ivShuffle.setImageResource(R.drawable.ic_shuffle_black_24dp);
+                }
+                if (repeat == 1) {
+                    ivRepeat.setImageResource(R.drawable.ic_repeat_one_black_24dp);
+                } else if (repeat == 2) {
+                    ivRepeat.setImageResource(R.drawable.ic_repeat_black_24dp);
+                }
                 play();
                 break;
 
@@ -298,6 +310,14 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
                     ivPlay.setBackgroundResource(R.drawable.ic_pause_circle_outline_black_24dp);
                 } else {
                     ivPlay.setBackgroundResource(R.drawable.ic_play_circle_outline_black_24dp);
+                }
+                if (shuffle == 1) {
+                    ivShuffle.setImageResource(R.drawable.ic_shuffle_black_24dp);
+                }
+                if (repeat == 1) {
+                    ivRepeat.setImageResource(R.drawable.ic_repeat_one_black_24dp);
+                } else if (repeat == 2) {
+                    ivRepeat.setImageResource(R.drawable.ic_repeat_black_24dp);
                 }
                 break;
 
@@ -410,13 +430,15 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Log.d("Link", "" + itemSong.getLink1());
-                                download(itemSong.getLink1());
+                                DownloadMusic downloadMusic = new DownloadMusic(itemSong.getTitle().replace(" ", "_") + "_128kbps");
+                                downloadMusic.execute(itemSong.getLink1());
                             }
                         })
-                        .setNegativeButton("256 kbps", new DialogInterface.OnClickListener() {
+                        .setNegativeButton("320 kbps", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                download(itemSong.getLink2());
+                                DownloadMusic downloadMusic = new DownloadMusic(itemSong.getTitle().replace(" ", "_") + "_320kbps");
+                                downloadMusic.execute(itemSong.getLink2());
                             }
                         })
                         .create();
@@ -429,14 +451,14 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void nextSong() {
-        if(repeat != 1) {
-            if(shuffle == 0) {
+        if (repeat != 1) {
+            if (shuffle == 0) {
                 if (index < itemSongs.size() - 1) {
                     index += 1;
                 } else if (index == itemSongs.size() - 1) {
                     index = 0;
                 }
-            }else {
+            } else {
                 index = (new Random()).nextInt(itemSongs.size());
             }
             itemSong = itemSongs.get(index);
@@ -445,24 +467,19 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void privousSong() {
-        if(playSong.getTimeCurrent() < 5) {
-            if(shuffle == 0) {
+        if (playSong.getTimeCurrent() < 5) {
+            if (shuffle == 0) {
                 if (index == 0) {
                     index = itemSongs.size() - 1;
                 } else if (index > 0) {
                     index -= 1;
                 }
-            }else {
+            } else {
                 index = (new Random()).nextInt(itemSongs.size());
             }
             itemSong = itemSongs.get(index);
         }
         play();
-    }
-
-    private void download(String url) {
-        DownloadMusic downloadMusic = new DownloadMusic(itemSong.getTitle().replace(" ", "_"));
-        downloadMusic.execute(url);
     }
 
     private class DownloadMusic extends AsyncTask<String, Void, Void> {
@@ -483,6 +500,9 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
                 connection.connect();
                 File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()
                         + "/" + Environment.DIRECTORY_DOWNLOADS + "/" + name + ".mp3");
+                if (file.exists()) {
+                    file.delete();
+                }
                 FileOutputStream fos = new FileOutputStream(file);
                 InputStream is = connection.getInputStream();
                 int length;
@@ -566,6 +586,8 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
         sbTime.setMax(sp.getInt("timetotal", 0));
         isPlay = sp.getBoolean("isplay", false);
         index = sp.getInt("index", 0);
+        shuffle = sp.getInt("shuffle", 0);
+        repeat = sp.getInt("repeat", 0);
         Glide.with(PlayActivity.this).load(sp.getString("cover", "")).into(civCoverSong1);
         itemSong = new ItemSong(sp.getString("title", ""), sp.getString("artist", ""), sp.getString("cover", ""), sp.getString("source1", ""),
                 sp.getString("source2", ""), sp.getString("link1", ""), sp.getString("link2", ""));
@@ -574,17 +596,21 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
     private void addInfo() {
         sp = (App.getContext()).getSharedPreferences("Rank", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putString("title", itemSong.getTitle());
-        editor.putString("artist", itemSong.getArtist());
-        editor.putString("cover", itemSong.getCover());
-        editor.putString("link1", itemSong.getLink1());
-        editor.putString("link2", itemSong.getLink2());
-        editor.putString("source1", itemSong.getSource1());
-        editor.putString("source2", itemSong.getSource2());
-        editor.putInt("timetotal", playSong.getTimeTotal());
-        editor.putInt("timecurrent", playSong.getTimeCurrent());
-        editor.putBoolean("isplay", isPlay);
-        editor.putInt("index", index);
+        if (played) {
+            editor.putString("title", itemSong.getTitle());
+            editor.putString("artist", itemSong.getArtist());
+            editor.putString("cover", itemSong.getCover());
+            editor.putString("link1", itemSong.getLink1());
+            editor.putString("link2", itemSong.getLink2());
+            editor.putString("source1", itemSong.getSource1());
+            editor.putString("source2", itemSong.getSource2());
+            editor.putInt("timetotal", playSong.getTimeTotal());
+            editor.putInt("timecurrent", playSong.getTimeCurrent());
+            editor.putBoolean("isplay", isPlay);
+            editor.putInt("index", index);
+            editor.putInt("repeat", repeat);
+            editor.putInt("shuffle", shuffle);
+        }
         editor.apply();
     }
 
@@ -609,10 +635,14 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                 civCoverSong.setImageBitmap(resource);
                 civCoverSong.startAnimation(animCoverSong);
+                ivActivityPlay.setImageBitmap(resource);
                 civCoverSong1.setImageBitmap(resource);
                 civCoverSong1.startAnimation(animCoverSong);
+                ivActivityPlay.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                ivActivityPlay.setAlpha((float) 0.1);
             }
         });
+        played = true;
         ivPlay.setBackgroundResource(R.drawable.ic_pause_circle_outline_black_24dp);
         if (playSong != null) {
             if (isPlay) {
@@ -652,7 +682,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void OnCompletion() {
-        Log.d("Completion","hihi");
+        Log.d("Completion", "hihi");
         nextSong();
     }
 }

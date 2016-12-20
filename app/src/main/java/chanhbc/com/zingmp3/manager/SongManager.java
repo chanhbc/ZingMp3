@@ -42,7 +42,7 @@ public class SongManager {
                         String source2 = sourceList.getS320();
                         SongOnline.SongList.LinkList linkList = songList.getLinkDownload();
                         String link1 = linkList.getLink128();
-                        String link2 = linkList.getLink128();
+                        String link2 = linkList.getLink320();
                         ItemSong song = new ItemSong(title, artist, cover, source1, source2, link1, link2);
                         itemSongs.add(song);
                     }

@@ -166,7 +166,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onSongLoad(ItemAlbum itemAlbum) {
-        tabLayout.setVisibility(View.GONE);
         Intent intent = new Intent(this, PlayActivity.class);
         intent.putExtra("SongId", itemAlbum.getId());
         intent.putExtra("SongCover", itemAlbum.getCover());

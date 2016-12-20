@@ -67,7 +67,6 @@ public class PlaySong extends Service implements MediaPlayer.OnPreparedListener,
     }
 
     public int getTimeTotal() {
-        Log.d("TIME1", mediaPlayer.getDuration() + "");
         return mediaPlayer.getDuration()/1000;
     }
 
