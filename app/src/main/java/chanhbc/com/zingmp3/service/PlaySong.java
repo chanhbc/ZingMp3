@@ -67,11 +67,15 @@ public class PlaySong extends Service implements MediaPlayer.OnPreparedListener,
     }
 
     public int getTimeTotal() {
-        return mediaPlayer.getDuration()/1000;
+        return mediaPlayer.getDuration() / 1000;
     }
 
-    public int getTimeCurrent(){
-        return mediaPlayer.getCurrentPosition()/1000;
+    public void seek(int time) {
+        mediaPlayer.seekTo(time);
+    }
+
+    public int getTimeCurrent() {
+        return mediaPlayer.getCurrentPosition() / 1000;
     }
 
     public void start() {
@@ -86,12 +90,13 @@ public class PlaySong extends Service implements MediaPlayer.OnPreparedListener,
         }
     }
 
-    public void setOnPrepareListener(OnPrepareListener listener){
+    public void setOnPrepareListener(OnPrepareListener listener) {
         this.onPrepareListener = listener;
     }
 
-    public interface OnPrepareListener{
+    public interface OnPrepareListener {
         void OnPrepare();
+
         void OnCompletion();
     }
 }

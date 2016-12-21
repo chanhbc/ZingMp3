@@ -53,7 +53,7 @@ import chanhbc.com.zingmp3.model.StaticFinal;
 import chanhbc.com.zingmp3.service.PlaySong;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class PlayActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener, PlaySong.OnPrepareListener {
+public class PlayActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener, PlaySong.OnPrepareListener, SeekBar.OnSeekBarChangeListener, View.OnLongClickListener {
     private String codeId;
     private SongManager songManager;
     private CustomListView lvSong;
@@ -72,7 +72,6 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
     private String urlCoverAlbum;
     private ItemSong itemSong;
     private ArrayList<ItemSong> itemSongs;
-    private Animation anim_ll_play_song;
     private Animation animCoverSong;
     private ImageView ivClose;
     private ImageView ivPlay;
@@ -84,13 +83,14 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
     private ImageView ivShuffle;
     private ImageView ivRepeat;
     private ImageView ivDownload;
-    private boolean isPlay = true;
+    private boolean isPlay = false;
     private PlaySong playSong;
     private TextView tvTimeCurrent;
     private TextView tvTimeTotal;
     private SeekBar sbTime;
     private int repeat = 0;
     private int shuffle = 0;
+    private int timeCurrent = 0;
     private Intent service;
     private boolean bound;
     private boolean isServiceRunning;
@@ -118,8 +118,11 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
                         break;
 
                     case StaticFinal.UPDATE_TIME_TEXTVIEW:
-                        tvTimeCurrent.setText(getTimeFormat(playSong.getTimeCurrent()));
-                        sbTime.setProgress(playSong.getTimeCurrent());
+                        if (isPlay) {
+                            timeCurrent = playSong.getTimeCurrent();
+                            tvTimeCurrent.setText(getTimeFormat(timeCurrent));
+                            sbTime.setProgress(playSong.getTimeCurrent());
+                        }
                         break;
                 }
                 return false;
@@ -135,6 +138,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
         startService(service);
         bindService(service, connection, BIND_AUTO_CREATE);
         initViews();
+        initListener();
         initComponents();
     }
 
@@ -168,6 +172,9 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
         ivDownload = (ImageView) findViewById(R.id.iv_download);
         llSong = (LinearLayout) findViewById(R.id.ll_song);
         ivActivityPlay = (ImageView) findViewById(R.id.iv_activity_play);
+    }
+
+    private void initListener() {
         ivDownload.setOnClickListener(this);
         ivClose.setOnClickListener(this);
         ivPlay.setOnClickListener(this);
@@ -186,11 +193,12 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
         tvArtist.setSelected(true);
         tvTitle.setSelected(true);
         lvSong.setExpanded(true);
+        sbTime.setOnSeekBarChangeListener(this);
+        ivNext.setOnLongClickListener(this);
+        ivPrivous.setOnLongClickListener(this);
     }
 
     private void initComponents() {
-        anim_ll_play_song = AnimationUtils.loadAnimation(PlayActivity.this, R.anim.anim_translate_ll_play_song_full);
-//        anim_ll_play_song_down = AnimationUtils.loadAnimation(getContext(), R.anim.anim_translate_ll_play_song_full_down);
         animCoverSong = AnimationUtils.loadAnimation(PlayActivity.this, R.anim.anim_rotate_image_cover_song);
         songManager = new SongManager(codeId);
         songManager.getItemSongs(new SongManager.OnGetSongOnlineListener() {
@@ -208,15 +216,16 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
 
             }
         });
-        if (isServiceRunning) {
+        if (isServiceRunning && played) {
             llPlayLite.setVisibility(View.VISIBLE);
             getInfo();
             if (isPlay) {
                 ivPlay1.setBackgroundResource(R.drawable.ic_pause_circle_outline_black_24dp);
+                startThread();
             } else {
                 ivPlay1.setBackgroundResource(R.drawable.ic_play_circle_outline_black_24dp);
             }
-            startThread();
+            Log.d("Day la log 3", "");
         }
     }
 
@@ -303,7 +312,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
                     @Override
                     public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                         civCoverSong.setImageBitmap(resource);
-                        civCoverSong.startAnimation(animCoverSong);
+                        civCoverSong.setAnimation(animCoverSong);
                     }
                 });
                 if (isPlay) {
@@ -482,6 +491,42 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
         play();
     }
 
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        if (timeCurrent != progress && timeCurrent != 0)
+            playSong.seek(sbTime.getProgress() * 1000);
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        switch (v.getId()) {
+            case R.id.iv_next:
+                if ((timeCurrent + 5) < playSong.getTimeTotal()) {
+                    playSong.seek((timeCurrent + 5) * 1000);
+                }
+                break;
+            case R.id.iv_privious:
+                if ((timeCurrent - 5) > 0) {
+                    playSong.seek((timeCurrent - 5) * 1000);
+                }
+                break;
+
+            default:
+                break;
+        }
+        return true;
+    }
+
     private class DownloadMusic extends AsyncTask<String, Void, Void> {
         private HttpURLConnection connection;
         private String name;
@@ -588,6 +633,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
         index = sp.getInt("index", 0);
         shuffle = sp.getInt("shuffle", 0);
         repeat = sp.getInt("repeat", 0);
+        played = sp.getBoolean("played", false);
         Glide.with(PlayActivity.this).load(sp.getString("cover", "")).into(civCoverSong1);
         itemSong = new ItemSong(sp.getString("title", ""), sp.getString("artist", ""), sp.getString("cover", ""), sp.getString("source1", ""),
                 sp.getString("source2", ""), sp.getString("link1", ""), sp.getString("link2", ""));
@@ -610,6 +656,10 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
             editor.putInt("index", index);
             editor.putInt("repeat", repeat);
             editor.putInt("shuffle", shuffle);
+            editor.putBoolean("played", played);
+        } else {
+            editor.putBoolean("isplay", isPlay);
+            editor.putBoolean("played", played);
         }
         editor.apply();
     }
@@ -682,7 +732,6 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void OnCompletion() {
-        Log.d("Completion", "hihi");
         nextSong();
     }
 }
