@@ -10,7 +10,11 @@ public class StaticFinal {
     public static final int UPDATE_SONGLIST = 1;
     public static final int ADD_ITEM_GRIDVIEW = 2;
     public static final int UPDATE_TIME_TEXTVIEW = 3;
-    public static final String KEY = "CodeId";
     public static final String SONG_JSON_URL_PART_1 = "http://api.mp3.zing.vn/api/mobile/playlist/getsonglist?requestdata={%22length%22:200,%22id%22:%22";
     public static final String SONG_JSON_URL_PART_2 = "\",\"start\":0}&keycode=b319bd16be6d049fdb66c0752298ca30&fromvn=true";
+    public static final String PREV_ACTION_NO = "PREV_ACTION";
+    public static final String PLAY_ACTION_NO = "PLAY_ACTION";
+    public static final String NEXT_ACTION_NO = "NEXT_ACTION";
+    public static final String STOP_FOREGROUND_ACTION = "STOP_FOREGROUND_ACTION";
+    public static final int ID_NO_MEDIA=30;
 }

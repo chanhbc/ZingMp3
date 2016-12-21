@@ -2,13 +2,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#cecece"
     tools:context="chanhbc.com.zingmp3.fragment.AlbumFragmentManager">
 
     <GridView
         android:id="@+id/gv_album"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#ffffff"
+        android:background="#cecece"
         android:numColumns="2"
         android:elevation="4dp"
         android:stretchMode="columnWidth">

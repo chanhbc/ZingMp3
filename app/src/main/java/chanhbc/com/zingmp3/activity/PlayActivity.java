@@ -1,7 +1,6 @@
 package chanhbc.com.zingmp3.activity;
 
 import android.app.ActivityManager;
-import android.app.Application;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -25,7 +24,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,7 +51,7 @@ import chanhbc.com.zingmp3.model.StaticFinal;
 import chanhbc.com.zingmp3.service.PlaySong;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class PlayActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener, PlaySong.OnPrepareListener, SeekBar.OnSeekBarChangeListener, View.OnLongClickListener {
+public class PlayActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener, PlaySong.OnListener, SeekBar.OnSeekBarChangeListener, View.OnLongClickListener {
     private String codeId;
     private SongManager songManager;
     private CustomListView lvSong;
@@ -135,10 +133,17 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
         }
         service = new Intent();
         service.setClass(PlayActivity.this, PlaySong.class);
+        service.putExtra("SongId", codeId);
+        service.putExtra("SongCover", urlCoverAlbum);
         startService(service);
         bindService(service, connection, BIND_AUTO_CREATE);
         initViews();
         initListener();
+        sp = (App.getContext()).getSharedPreferences("Rank", Context.MODE_PRIVATE);
+        played = sp.getBoolean("played", false);
+        if (intent.getBooleanExtra("service", false)) {
+
+        }
         initComponents();
     }
 
@@ -219,13 +224,13 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
         if (isServiceRunning && played) {
             llPlayLite.setVisibility(View.VISIBLE);
             getInfo();
+            Glide.with(PlayActivity.this).load(urlCoverAlbum).into(ivCoverAlbum);
             if (isPlay) {
                 ivPlay1.setBackgroundResource(R.drawable.ic_pause_circle_outline_black_24dp);
                 startThread();
             } else {
                 ivPlay1.setBackgroundResource(R.drawable.ic_play_circle_outline_black_24dp);
             }
-            Log.d("Day la log 3", "");
         }
     }
 
@@ -361,7 +366,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
                 } else {
                     isPlay = true;
                     ivPlay1.setBackgroundResource(R.drawable.ic_pause_circle_outline_black_24dp);
-                    playSong.start();
+                    playSong.start(itemSong);
                     startThread();
                 }
                 break;
@@ -374,7 +379,7 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
                 } else {
                     isPlay = true;
                     ivPlay.setBackgroundResource(R.drawable.ic_pause_circle_outline_black_24dp);
-                    playSong.start();
+                    playSong.start(itemSong);
                     startThread();
                 }
                 break;
@@ -471,6 +476,9 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
                 index = (new Random()).nextInt(itemSongs.size());
             }
             itemSong = itemSongs.get(index);
+        }
+        if (repeat == 0 && index == itemSongs.size() - 1) {
+            return;
         }
         play();
     }
@@ -696,10 +704,10 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
         ivPlay.setBackgroundResource(R.drawable.ic_pause_circle_outline_black_24dp);
         if (playSong != null) {
             if (isPlay) {
-                playSong.play(itemSong.getSource1());
-                playSong.setOnPrepareListener(PlayActivity.this);
+                playSong.play(itemSong.getSource1(), itemSong);
+                playSong.setOnListener(PlayActivity.this);
             } else {
-                playSong.start();
+                playSong.start(itemSong);
             }
         }
     }
@@ -733,5 +741,38 @@ public class PlayActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void OnCompletion() {
         nextSong();
+    }
+
+    @Override
+    public void OnPlaySong() {
+        if (isPlay) {
+            isPlay = false;
+            ivPlay.setBackgroundResource(R.drawable.ic_play_circle_outline_black_24dp);
+            pause();
+        } else {
+            isPlay = true;
+            ivPlay.setBackgroundResource(R.drawable.ic_pause_circle_outline_black_24dp);
+            playSong.start(itemSong);
+            startThread();
+        }
+    }
+
+    @Override
+    public void OnNextSong() {
+        nextSong();
+    }
+
+    @Override
+    public void OnPrevSong() {
+        privousSong();
+    }
+
+    @Override
+    public void OnPauseSong() {
+        isPlay = false;
+        ivPlay.setBackgroundResource(R.drawable.ic_play_circle_outline_black_24dp);
+        if (playSong != null) {
+            playSong.stop();
+        }
     }
 }
